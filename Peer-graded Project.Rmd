@@ -1,0 +1,48 @@
+## Load and Clean the data -------------------------------------------------
+```{r}
+training <- read.csv("pml-training.csv", header=TRUE)
+testing <- read.csv("pml-test.csv", header=TRUE)
+library(caret)
+library(randomForest)
+library(plyr)
+options(warn=-1)
+```
+
+```{r}
+testing <- subset(testing, select=-c(1:7))
+training <- subset(training, select=-c(1:7))
+threshold_val <- 0.95 * dim(training)[1]
+
+include_cols <- !apply(training, 2, function(y) sum(is.na(y)) > threshold_val || sum(y=="") > threshold_val)
+training <- training[, include_cols]
+Zvariable <- nearZeroVar(training, saveMetrics = TRUE)
+training <- training[ , Zvariable$nzv==FALSE] 
+dim(training)
+
+```
+## modeling 
+```{r}
+
+
+
+set.seed(200)
+inputfortrain = createDataPartition(training$classe, p = 0.7, list=FALSE)
+tr_1 <- training[inputfortrain,]
+tr_2 <- training[-inputfortrain,]
+
+randomForMod <- randomForest(classe~., data=tr_1, importance=TRUE)
+randomForMod
+
+tr_2_pred <- predict(randomForMod, newdata=tr_2)
+#  Confusion Matrix here :
+confusionMatrix(tr_2_pred, tr_2$classe)
+# Testing the model on the 'testing' dataset
+testing_pred <- predict(randomForMod, newdata=testing)
+testing_pred
+```
+
+## Checking Sample error
+```{r}
+confM <- confusionMatrix(tr_2_pred, tr_2$classe)
+sum(diag(confM$table))/sum(confM$table)
+```
