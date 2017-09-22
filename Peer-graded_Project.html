@@ -119,8 +119,8 @@ $(document).ready(function () {
 </div>
 
 
-<div id="load-and-clean-the-data--" class="section level2">
-<h2>Load and Clean the data ————————————————-</h2>
+<div id="load-and-clean-the-data" class="section level2">
+<h2>Load and Clean the data</h2>
 <pre class="r"><code>training &lt;- read.csv(&quot;pml-training.csv&quot;, header=TRUE)
 testing &lt;- read.csv(&quot;pml-test.csv&quot;, header=TRUE)
 library(caret)</code></pre>
@@ -154,8 +154,8 @@ inputfortrain = createDataPartition(training$classe, p = 0.7, list=FALSE)
 tr_1 &lt;- training[inputfortrain,]
 tr_2 &lt;- training[-inputfortrain,]
 
-randomForMod &lt;- randomForest(classe~., data=tr_1, importance=TRUE)
-randomForMod</code></pre>
+rfvar &lt;- randomForest(classe~., data=tr_1, importance=TRUE)
+rfvar</code></pre>
 <pre><code>## 
 ## Call:
 ##  randomForest(formula = classe ~ ., data = tr_1, importance = TRUE) 
@@ -171,7 +171,7 @@ randomForMod</code></pre>
 ## C    0    9 2385    2    0 0.004590985
 ## D    0    0   23 2228    1 0.010657194
 ## E    0    0    1    7 2517 0.003168317</code></pre>
-<pre class="r"><code>tr_2_pred &lt;- predict(randomForMod, newdata=tr_2)
+<pre class="r"><code>tr_2_pred &lt;- predict(rfvar, newdata=tr_2)
 #  Confusion Matrix here :
 confusionMatrix(tr_2_pred, tr_2$classe)</code></pre>
 <pre><code>## Confusion Matrix and Statistics
@@ -206,7 +206,7 @@ confusionMatrix(tr_2_pred, tr_2$classe)</code></pre>
 ## Detection Prevalence   0.2851   0.1930   0.1750   0.1641   0.1827
 ## Balanced Accuracy      0.9983   0.9943   0.9949   0.9948   0.9962</code></pre>
 <pre class="r"><code># Testing the model on the 'testing' dataset
-testing_pred &lt;- predict(randomForMod, newdata=testing)
+testing_pred &lt;- predict(rfvar, newdata=testing)
 testing_pred</code></pre>
 <pre><code>##  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 
 ##  B  A  B  A  A  E  D  B  A  A  B  C  B  A  E  E  A  B  B  B 

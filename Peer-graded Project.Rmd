@@ -1,4 +1,4 @@
-## Load and Clean the data -------------------------------------------------
+## Load and Clean the data 
 ```{r}
 training <- read.csv("pml-training.csv", header=TRUE)
 testing <- read.csv("pml-test.csv", header=TRUE)
@@ -30,14 +30,14 @@ inputfortrain = createDataPartition(training$classe, p = 0.7, list=FALSE)
 tr_1 <- training[inputfortrain,]
 tr_2 <- training[-inputfortrain,]
 
-randomForMod <- randomForest(classe~., data=tr_1, importance=TRUE)
-randomForMod
+rfvar <- randomForest(classe~., data=tr_1, importance=TRUE)
+rfvar
 
-tr_2_pred <- predict(randomForMod, newdata=tr_2)
+tr_2_pred <- predict(rfvar, newdata=tr_2)
 #  Confusion Matrix here :
 confusionMatrix(tr_2_pred, tr_2$classe)
 # Testing the model on the 'testing' dataset
-testing_pred <- predict(randomForMod, newdata=testing)
+testing_pred <- predict(rfvar, newdata=testing)
 testing_pred
 ```
 
